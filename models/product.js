@@ -13,7 +13,7 @@ module.exports = function (sequelize, DataTypes) {
         
     
         price: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             allowNull: false
         },
     
@@ -21,6 +21,12 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0
+        },
+        
+        image: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: "classicEspresso"
         }
     });
 
