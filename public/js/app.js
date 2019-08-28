@@ -2,14 +2,17 @@ $(document).ready(function () {
 
     getProducts();
 
+    let dataHold;
 
     function getProducts() {
         $.get("/api/products", function (data) {
             console.log("Products", data)
+            holdData(data);
             buildRows(data);
+            
 
-        });
 
+        })
     };
 
 
@@ -33,30 +36,37 @@ $(document).ready(function () {
 
     let cart = [];
     $("#middleContainer").on("click", ".cartButton", function () {
-        console.log(this.id);
+        event.preventDefault();
         cart.push(this.id);
         localStorage.setItem("cartItems", cart)
         console.log(cart);
     });
 
 
-    $("#checkout").on("click", function (data) {
-        convertCart();
-        log(cart);
-        for (let i = 0; i < cart.length; i++) {
-            const prodDiv = `<div class="col-4">TEST</div>`;
-            const qtyDiv = `<div class=col-2>"</div>`;
-            const priceDiv = `<div class="col-3"></div>`;
-
-            $("#middleContainer").append(prodDiv);
-
-
-        }
+    $("#checkout").on("click", function () {
+        $(document).ready(function () {
+            buildCart(dataHold);
+        })
     });
 
 
-    function log(cart) {
+
+    function buildCart(dataHold) {
+        console.log(dataHold)
+        convertCart();
         console.log(cart);
+        for (let i = 0; i < cart.length; i++) {
+            const prodDiv = `<div class="col-4">${dataHold[cart[i]]["product_name"]}</div>`;
+            const qtyDiv = `<div class="col-2">${dataHold[cart[i]]["stock_quantity"]}</div>`;
+            const priceDiv = `<div class="col-3">$${dataHold[cart[i]]["price"]}</div>`;
+
+            $("#cartRow").append(prodDiv);
+            $("#cartRow").append(qtyDiv);
+            $("#cartRow").append(priceDiv);
+
+
+        }
+
     };
 
 
@@ -67,6 +77,11 @@ $(document).ready(function () {
         });
 
     };
+
+    function holdData (data) {
+        dataHold = data;
+        console.log(dataHold);
+    }
 
 
 });
