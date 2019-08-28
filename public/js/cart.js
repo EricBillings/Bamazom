@@ -12,13 +12,14 @@ $(document).ready(function () {
             cart = cart.split(",");
             cartQty(cart);
             buildCart(data, cart, cartObject)
-            
-            
-            
+
+
+
         })
     };
-    
-    
+
+    const total = [];
+
     function buildCart(data, cart, cartObject) {
         console.log(data);
         console.log(cartObject);
@@ -30,36 +31,41 @@ $(document).ready(function () {
             const priceDiv = `<div class="col-3">$${data[newCart[i]]["price"]}</div>`;
             let extPrice = data[newCart[i]]["price"] * cartObject[newCart[i]];
             const extPriceDiv = `<div class="col-3">$${extPrice}</div>`;
+            total.push(extPrice);
             $("#cartRow").append(prodDiv);
             $("#cartRow").append(qtyDiv);
             $("#cartRow").append(priceDiv);
             $("#cartRow").append(extPriceDiv);
-            
-        }  
-        
-        const purchaseButton =  `<a class="btn btn-light" id="purchaseButton">Purchase</a>`;
 
-        $("#purchaseCol").append(purchaseButton)
-       
+        }
 
-    };
+        console.log(total);
 
-
-    function convertCart(cart) {
-    
-        cart = cart.map(Number);
-        cart = cart.map(function (item) {
-            return item;
+     
+        let finalTotal = total.reduce(function (acc, amount) {
+            return acc + amount
         });
 
+        console.log(finalTotal);
+        const totalDiv = `<div class="col-3">$${finalTotal}</div>`;
+        
+       const purchaseButton =  `<a class="btn btn-light" id="purchaseButton">Purchase</a>`;
+
+       $("#totalCol").append(totalDiv);
+
+        $("#purchaseCol").append(purchaseButton);
+
+
     };
-    
+
+
+
 
     function cartQty(cart) {
 
         cart.forEach(function (item) {
-          if(!cartObject[item])
-              cartObject[item] = 0;
+            if (!cartObject[item])
+                cartObject[item] = 0;
             cartObject[item] += 1;
         })
 
