@@ -32,17 +32,21 @@ $(document).ready(function () {
         const newCart = [...uniqueCart];
         const purchaseButton = `<a class="btn btn-light purchase" id="purchaseButton">Purchase</a>`;
         $("#purchaseCol").append(purchaseButton);
-
-
+        const homeButton = `<a href="/" class="btn btn-light home" style="margin: 5px" id="home">Back to Shopping</a>`;
+        
+        
         for (let i = 0; i < newCart.length; i++) {
             let prodDiv;
             let dataPosition = newCart[i] - 1;
-            console.log(cartObject);
-            console.log(newCart[i]);
-            console.log(data[dataPosition]);
-            if (cartObject[newCart[i]] > data[dataPosition]["stockQuantity"]) {
+            console.log(cartObject[newCart[i]]);
+            console.log(data[dataPosition]["stock_quantity"]);
+            if (cartObject[newCart[i]] > data[dataPosition]["stock_quantity"]) {
                 prodDiv = `<div>Sorry, not enough stock for your order</div>`;
+                
+                
                 $("#cartRow").append(prodDiv);
+                $("#totalCol").append(homeButton);
+                $("#purchaseButton").hide();
 
             } else {
 
