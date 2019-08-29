@@ -11,6 +11,21 @@ module.exports = function (app) {
 
     });
 
+    app.get("/api/products/:id", function(req, res) {
+        db.Product.findOne({
+          where: {
+            id: req.params.id
+          }
+        }).then(function() {
+          console.log(res);
+        });
+      });
+    
+
+
+
+
+
     app.post("/api/products", function (req, res) {
         db.Product.create({
             product_name: req.body.product_name,
@@ -35,21 +50,15 @@ module.exports = function (app) {
     });
 
     app.put("/api/products", function (req, res) {
-        console.log('***',req.body)
-        let dbProducts;
-        req.body.cart.forEach(el => {
-                    db.Product.update({
-                stock_quantity: el.stock_quantity
-        }, {
-                where: {
-                    id: el.id
-                }
-            })
-            .then(function (dbProduct) {
-                dbProducts = dbProduct
-            });
+        req.body.cart.forEach(function(item) {
+            db.Product.update({
+                stock_quantity: item.stock_quantity
+            }, {
+                    where: {
+                        id: item.id
+                    }
+                })
         })
-        res.json(dbProducts);
     });
 
 };

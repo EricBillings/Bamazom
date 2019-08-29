@@ -16,7 +16,7 @@ $(document).ready(function () {
 
     function buildCards(data) {
         for (let i = 0; i < data.length; i++) {
-            const newCard = $(`<div class="card" id="card${data[i]}" style="width: 18rem;">
+            const newCard = $(`<div class="card" id="card${data[i]}" style="width: 18rem; float: left; margin: 10px">
             <img src="./images/${data[i]["image"]}.jpg" class="card-img-top" alt="${data[i]["image"]}">
             <div class="card-body">
             <h5 class="card-title">${data[i]["product_name"]}</h5>
@@ -36,6 +36,7 @@ $(document).ready(function () {
     $("#middleContainer").on("click", ".cartButton", function () {
         event.preventDefault();
         cart.push(this.id);
+        console.log(cart.id);
         localStorage.setItem("cartItems", cart)
         console.log(cart);
     });
