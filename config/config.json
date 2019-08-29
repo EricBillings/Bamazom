@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "ShakeRag1!",
+    "password": "",
     "database": "bamazon_db",
     "host": "127.0.0.1",
     "dialect": "mysql",
