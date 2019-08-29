@@ -35,20 +35,21 @@ module.exports = function (app) {
     });
 
     app.put("/api/products", function (req, res) {
-
-        db.Product.update({
-            product_name: req.body.product_name,
-            department_name: req.body.department_name,
-            price: req.body.price,
-            stock_quantity: req.body.stock_quantity
+        console.log('***',req.body)
+        let dbProducts;
+        req.body.cart.forEach(el => {
+                    db.Product.update({
+                stock_quantity: el.stock_quantity
         }, {
                 where: {
-                    id: req.body.id
+                    id: el.id
                 }
             })
             .then(function (dbProduct) {
-                res.json(dbProduct);
+                dbProducts = dbProduct
             });
+        })
+        res.json(dbProducts);
     });
 
 };
