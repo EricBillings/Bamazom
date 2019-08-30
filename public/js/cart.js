@@ -9,10 +9,9 @@ $(document).ready(function () {
     const cartObject = {};
     let dataHold;
 
-
+    /* Gets data from database*/
     function getProducts() {
         $.get("/api/products", function (data) {
-            console.log("Products", data)
             let cart = localStorage.getItem("cartItems");
             cart = cart.split(",");
             cartQty(cart);
@@ -26,24 +25,26 @@ $(document).ready(function () {
 
 
     const total = [];
+    const homeButton = `<a href="/" class="btn btn-light home" style="margin: 5px" id="home">Back to Shopping</a>`;
 
+
+    /* Builds cart HTML*/
     function buildCart(data, cart, cartObject) {
         const uniqueCart = new Set(cart);
         const newCart = [...uniqueCart];
         const purchaseButton = `<a class="btn btn-light purchase" id="purchaseButton">Purchase</a>`;
         $("#purchaseCol").append(purchaseButton);
-        const homeButton = `<a href="/" class="btn btn-light home" style="margin: 5px" id="home">Back to Shopping</a>`;
-        
-        
+
+        /* Compares cart quantity to stock quantity and allows or stops transaction*/
         for (let i = 0; i < newCart.length; i++) {
             let prodDiv;
             let dataPosition = newCart[i] - 1;
+            console.log(dataPosition);
             console.log(cartObject[newCart[i]]);
-            console.log(data[dataPosition]["stock_quantity"]);
             if (cartObject[newCart[i]] > data[dataPosition]["stock_quantity"]) {
                 prodDiv = `<div>Sorry, not enough stock for your order</div>`;
-                
-                
+
+
                 $("#cartRow").append(prodDiv);
                 $("#totalCol").append(homeButton);
                 $("#purchaseButton").hide();
@@ -56,17 +57,17 @@ $(document).ready(function () {
                 let extPrice = data[dataPosition]["price"] * cartObject[newCart[i]];
                 const extPriceDiv = `<div class="col-3">$${extPrice}</div>`;
                 total.push(extPrice);
-            
 
 
-            $("#cartRow").append(prodDiv);
-            $("#cartRow").append(qtyDiv);
-            $("#cartRow").append(priceDiv);
-            $("#cartRow").append(extPriceDiv);
+
+                $("#cartRow").append(prodDiv);
+                $("#cartRow").append(qtyDiv);
+                $("#cartRow").append(priceDiv);
+                $("#cartRow").append(extPriceDiv);
             }
         }
 
-
+        /* Builds total purchase amount */
         let finalTotal = total.reduce(function (acc, amount) {
             return acc + amount
         });
@@ -80,12 +81,8 @@ $(document).ready(function () {
 
     };
 
-
-
-
-
+    /* Builds object to hold unique cart items with quantity in cart*/
     function cartQty(cart) {
-        console.log(cart);
 
         cart.forEach(function (item) {
             if (!cartObject[item])
@@ -100,27 +97,20 @@ $(document).ready(function () {
     ];
 
 
-
+    /* Builds individual cart items into objects for PUT request */
     function handlePurchase(req, res) {
         let cartItems = Object.keys(cartObject);
 
-        console.log(cartItems);
         for (let i = 0; i < cartItems.length; i++) {
             let cartItem = {};
             cartItem.id = cartItems[i];
-            console.log(cartItem);
-            cartArray.push(cartItem);
-            console.log(dataHold);
-            console.log(cartItems[i]);
-            let j = i;
-            console.log(dataHold[j]);
-            let stockQuantity = dataHold[j]["stock_quantity"];
-            console.log(stockQuantity);
+            let stockQuantity = dataHold[i]["stock_quantity"];
             cartItem.stock_quantity = stockQuantity - cartObject[cartItems[i]];
-
+            console.log(stockQuantity);
+            console.log(cartObject[cartItems[i]]);
+            cartArray.push(cartItem);
+            
         }
-
-
 
         $.ajax({
             method: "PUT",
@@ -132,13 +122,18 @@ $(document).ready(function () {
             .then(function (res) {
                 console.log(res)
             });
+            
+            localStorage.removeItem("cartItems");
+            
+            const thanksDiv = `<div>Thank you for your purchase!</div>`
+            $("#totalCol").append(thanksDiv);
+            $("#totalCol").append(homeButton);
+            $("#purchaseButton").hide();
+            
 
+            return
 
     };
-
-
-
-
 
 
 });
