@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/EricBillings/Bamazon#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "live-server": "^1.2.1",
     "mysql2": "^1.6.5",
     "nodemon": "^1.19.1",
